@@ -1,21 +1,48 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, unused_field, prefer_const_constructors, prefer_final_fields
 
-import 'package:dass_frontend/signin_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:dass_frontend/signin_screen.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class UserDashboard extends StatefulWidget {
   static const routeName = '/UserDashboard';
+
   @override
   _UserDashboardState createState() => _UserDashboardState();
 }
 
 class _UserDashboardState extends State<UserDashboard> {
+  int quizId = 0;
+  List<String> questions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchQuizQuestions();
+  }
+
+  Future<void> fetchQuizQuestions() async {
+    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/get_quiz_questions/$quizId'));
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      final List<dynamic> questionsData = responseData['questions'];
+      final List<String> fetchedQuestions = questionsData.map((question) => question['question'] as String).toList();
+
+      setState(() {
+        questions = fetchedQuestions;
+      });
+    } else {
+      print('Failed to fetch quiz questions. Error: ${response.reasonPhrase}');
+    }
+  }
+
   void _logout() {
-    
     Navigator.pushNamedAndRemoveUntil(
       context,
       SigninScreen.routeName,
-      (route) => false, 
+      (route) => false,
     );
   }
 
@@ -31,8 +58,14 @@ class _UserDashboardState extends State<UserDashboard> {
           ),
         ],
       ),
-      body: Text('This is the User Dashboard'),
+      body: ListView.builder(
+        itemCount: questions.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(questions[index]),
+          );
+        },
+      ),
     );
   }
 }
-
