@@ -7,23 +7,25 @@ import 'dart:convert';
 
 class UserDashboard extends StatefulWidget {
   static const routeName = '/UserDashboard';
+  final int? quizId;
+  const UserDashboard({required this.quizId});
 
   @override
   _UserDashboardState createState() => _UserDashboardState();
 }
 
 class _UserDashboardState extends State<UserDashboard> {
-  int quizId = 0;
   List<String> questions = [];
-
+  
   @override
   void initState() {
     super.initState();
     fetchQuizQuestions();
+    print(widget.quizId);
   }
 
   Future<void> fetchQuizQuestions() async {
-    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/get_quiz_questions/$quizId'));
+    final response = await http.get(Uri.parse('http://127.0.0.1:8000/api/get_quiz_questions/${widget.quizId}'));
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);

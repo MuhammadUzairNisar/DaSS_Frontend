@@ -45,13 +45,19 @@ class _SigninScreenState extends State<SigninScreen> {
       final responseData = json.decode(response.body);
       final user = responseData['user'];
       final userType = user['type'];
+      final quizId = user['quiz_id'];
 
       showToastMessage('Sign-in Successful');
 
       if (userType == 'admin') {
         Navigator.pushNamed(context, AdminDashboard.routeName);
       } else if (userType == 'user') {
-        Navigator.pushNamed(context, UserDashboard.routeName);
+        Navigator.pushNamedAndRemoveUntil(
+            context,
+            UserDashboard.routeName,
+            (route) => true,
+            arguments: quizId, 
+);
       } else {
         showToastMessage('Invalid User Type');
       }
