@@ -22,7 +22,6 @@ class _CreateUserState extends State<CreateUser> {
   String? selectedQuizId;
   List<Map<String, dynamic>> quizList = [];
 
-
   @override
   void initState() {
     super.initState();
@@ -39,23 +38,22 @@ class _CreateUserState extends State<CreateUser> {
   }
 
   Future<void> fetchQuizzes() async {
-  final url = Uri.parse('http://127.0.0.1:8000/api/get_quizzes');
-  try {
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      final List<dynamic> quizzesData = responseData['quizzes'];
-      setState(() {
-        quizList = quizzesData.cast<Map<String, dynamic>>();
-      });
-    } else {
-      print('Failed to fetch quizzes. Error: ${response.reasonPhrase}');
+    final url = Uri.parse('http://127.0.0.1:8000/api/get_quizzes');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final List<dynamic> quizzesData = responseData['quizzes'];
+        setState(() {
+          quizList = quizzesData.cast<Map<String, dynamic>>();
+        });
+      } else {
+        print('Failed to fetch quizzes. Error: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('An error occurred. Error: $e');
     }
-  } catch (e) {
-    print('An error occurred. Error: $e');
   }
-}
-
 
   Future<void> addUser() async {
     final url = Uri.parse('http://127.0.0.1:8000/api/add_user');
@@ -78,12 +76,12 @@ class _CreateUserState extends State<CreateUser> {
       final response = await http.post(url, headers: headers, body: body);
 
       if (response.statusCode == 200) {
-        showToastMessage('User Created Successfully');
+        // showToastMessage('User Created Successfully');
       } else {
-        showToastMessage('Failed to Create User');
+        // showToastMessage('Failed to Create User');
       }
     } catch (e) {
-      showToastMessage('An error occurred while creating user');
+      // showToastMessage('An error occurred while creating user');
     }
   }
 

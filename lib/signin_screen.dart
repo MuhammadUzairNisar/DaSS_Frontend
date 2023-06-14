@@ -27,47 +27,53 @@ class _SigninScreenState extends State<SigninScreen> {
     super.dispose();
   }
 
- Future<void> _signIn() async {
-  final url = 'http://127.0.0.1:8000/api/login';
-  final email = _emailController.text;
-  final password = _passwordController.text;
+  Future<void> _signIn() async {
+    final url = 'http://127.0.0.1:8000/api/login';
+    final email = _emailController.text;
+    final password = _passwordController.text;
 
-  try {
-    final response = await http.post(
-      Uri.parse(url),
-      body: {
-        'email': email,
-        'password': password,
-      },
-    );
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        body: {
+          'email': email,
+          'password': password,
+        },
+      );
 
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      final user = responseData['user'];
-      final userType = user['type'];
-      final quizId = user['quiz_id'];
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final user = responseData['user'];
+        final userType = user['type'];
+        final quizId = user['quiz_id'];
+        final name = user['name'];
+        final quiz_attempt_id = responseData['quiz_attempt_id'];
 
-      showToastMessage('Sign-in Successful');
+        // showToastMessage('Sign-in Successful');
 
-      if (userType == 'admin') {
-        Navigator.pushNamed(context, AdminDashboard.routeName);
-      } else if (userType == 'user') {
-        Navigator.pushNamedAndRemoveUntil(
+        if (userType == 'admin') {
+          Navigator.pushNamed(context, AdminDashboard.routeName);
+        } else if (userType == 'user') {
+          Navigator.push(
             context,
-            UserDashboard.routeName,
-            (route) => true,
-            arguments: quizId, 
-);
+            MaterialPageRoute(
+                builder: (context) => UserDashboard(
+                      quizId: quizId,
+                      name: name,
+                      quiz_attempt_id: quiz_attempt_id,
+                    )),
+          );
+          // print(quizId);
+        } else {
+          // showToastMessage('Invalid User Type');
+        }
       } else {
-        showToastMessage('Invalid User Type');
+        // showToastMessage('Sign-in Failed');
       }
-    } else {
-      showToastMessage('Sign-in Failed');
+    } catch (error) {
+      print('Error: $error');
     }
-  } catch (error) {
-    print('Error: $error');
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +104,9 @@ class _SigninScreenState extends State<SigninScreen> {
                     });
                   },
                   icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
                   ),
                 ),
               ),

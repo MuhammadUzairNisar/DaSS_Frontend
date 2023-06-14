@@ -22,7 +22,9 @@ class MyApp extends StatelessWidget {
         SigninScreen.routeName: (ctx) => SigninScreen(),
         AdminDashboard.routeName: (ctx) => AdminDashboard(),
         CreateUser.routeName: (ctx) => CreateUser(),
-        UserDashboard.routeName: (ctx) => UserDashboard(quizId: null,),
+        UserDashboard.routeName: (ctx) => UserDashboard(
+              quizId: null,
+            ),
       },
       debugShowCheckedModeBanner: false,
     );

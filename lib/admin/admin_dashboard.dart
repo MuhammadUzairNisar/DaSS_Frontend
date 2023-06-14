@@ -24,52 +24,51 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 
   Future<void> fetchUsers() async {
-  final url = Uri.parse('http://127.0.0.1:8000/api/get_users');
-  try {
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
-      final List<dynamic> usersData = responseData['users'];
-      setState(() {
-        users = usersData.map((userJson) => User.fromJson(userJson)).toList();
-      });
-    } else {
-      print('Failed to fetch users. Error: ${response.reasonPhrase}');
+    final url = Uri.parse('http://127.0.0.1:8000/api/get_users');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        final List<dynamic> usersData = responseData['users'];
+        setState(() {
+          users = usersData.map((userJson) => User.fromJson(userJson)).toList();
+        });
+      } else {
+        print('Failed to fetch users. Error: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('An error occurred. Error: $e');
     }
-  } catch (e) {
-    print('An error occurred. Error: $e');
   }
-}
 
-Future<void> deleteUser(int id) async {
-  final url = Uri.parse('http://127.0.0.1:8000/api/delete_user/$id');
-  try {
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      showToastMessage('User Deleted Successfully');
-      fetchUsers();
-    } else {
-      showToastMessage('Failed to Delete User');
-      print('Failed to delete user. Error: ${response.reasonPhrase}');
+  Future<void> deleteUser(int id) async {
+    final url = Uri.parse('http://127.0.0.1:8000/api/delete_user/$id');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        // showToastMessage('User Deleted Successfully');
+        fetchUsers();
+      } else {
+        // showToastMessage('Failed to Delete User');
+        print('Failed to delete user. Error: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('An error occurred while deleting user. Error: $e');
     }
-  } catch (e) {
-    print('An error occurred while deleting user. Error: $e');
   }
-}
 
-void _logout() {
-    
+  void _logout() {
     Navigator.pushNamedAndRemoveUntil(
       context,
       SigninScreen.routeName,
-      (route) => false, 
+      (route) => false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
+    return Scaffold(
+      appBar: AppBar(
         title: Text('Admin Dashboard'),
         actions: [
           IconButton(
@@ -78,46 +77,47 @@ void _logout() {
           ),
         ],
       ),
-    body: ListView(
-      children: [
-        Center(
-          child: ElevatedButton(
-            child: Text('Add User'),
-            onPressed: () {
-              Navigator.pushNamed(context, CreateUser.routeName);
-            },
+      body: ListView(
+        children: [
+          Center(
+            child: ElevatedButton(
+              child: Text('Add User'),
+              onPressed: () {
+                Navigator.pushNamed(context, CreateUser.routeName);
+              },
+            ),
           ),
-        ),
-        DataTable(
-          columns: const <DataColumn>[
-            DataColumn(label: Text('Name')),
-            DataColumn(label: Text('Email')),
-            DataColumn(label: Text('Type')),
-            DataColumn(label: Text('Delete')),
-          ],
-          rows: users.map((user) {
-            return DataRow(
-              cells: [
-                DataCell(Text(user.name)),
-                DataCell(Text(user.email)),
-                DataCell(Text(user.type)),
-                DataCell(
-                  IconButton(
-                    icon: Icon(Icons.delete),
-                    onPressed: () {
-                      deleteUser(user.id);
-                    },
+          DataTable(
+            columns: const <DataColumn>[
+              DataColumn(label: Text('Name')),
+              DataColumn(label: Text('Email')),
+              DataColumn(label: Text('Type')),
+              DataColumn(label: Text('Delete')),
+            ],
+            rows: users.map((user) {
+              return DataRow(
+                cells: [
+                  DataCell(Text(user.name)),
+                  DataCell(Text(user.email)),
+                  DataCell(Text(user.type)),
+                  DataCell(
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        deleteUser(user.id);
+                      },
+                    ),
                   ),
-                ),
-              ],
-            );
-          }).toList(),
-        ),
-      ],
-    ),
-  );
-}
-void showToastMessage(String? msg) {
+                ],
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showToastMessage(String? msg) {
     var toast = Fluttertoast.showToast(
       msg: msg!,
       toastLength: Toast.LENGTH_SHORT,
@@ -152,4 +152,3 @@ class User {
     );
   }
 }
-
