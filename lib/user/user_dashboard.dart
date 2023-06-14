@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors, avoid_print, depend_on_referenced_packages, non_constant_identifier_names, use_key_in_widget_constructors, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:dass_frontend/signin_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -63,9 +66,7 @@ class _UserDashboardState extends State<UserDashboard> {
         final responseData = json.decode(response.body);
         print(responseData);
         _logout();
-      } else {
-        // showToastMessage('Failed to Create User');
-      }
+      } else {}
     } catch (e) {
       print('An error occurred while creating user');
     }
@@ -85,8 +86,6 @@ class _UserDashboardState extends State<UserDashboard> {
       if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
       } else {
-        // Call your API here with the selectedOptions array
-        // print(selectedOptions);
         postQuiz();
       }
     });
@@ -98,6 +97,7 @@ class _UserDashboardState extends State<UserDashboard> {
       return Scaffold(
         appBar: AppBar(
           title: Text('${widget.name}'),
+          backgroundColor: Color.fromARGB(255, 76, 52, 225),
           actions: [
             IconButton(
               icon: Icon(Icons.logout),
@@ -106,62 +106,137 @@ class _UserDashboardState extends State<UserDashboard> {
           ],
         ),
         body: Center(
-          child:
-              CircularProgressIndicator(), // Display a loading indicator while fetching questions
+          child: CircularProgressIndicator(),
         ),
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.name}'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: _logout,
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(16.0),
-        children: [
-          Text(
-            'Question ${currentQuestionIndex + 1}:',
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.bold,
+    return Center(
+      child: Scaffold(
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        appBar: AppBar(
+          title: Center(child: Text(
+            '${widget.name}',
+          )),
+          backgroundColor: Color.fromARGB(255, 76, 52, 225),
+          automaticallyImplyLeading: false,
+        ),
+        body: ListView(
+          padding: EdgeInsets.all(16.0),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+              child: Text(
+                'Question ${currentQuestionIndex + 1}',
+                style: GoogleFonts.lobster(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 40,
+                  color: Color.fromARGB(255, 80, 80, 80),
+                ),
+              ),
             ),
-          ),
-          SizedBox(height: 8.0),
-          Text(
-            questions[currentQuestionIndex],
-            style: TextStyle(fontSize: 16.0),
-          ),
-          SizedBox(height: 16.0),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () => _selectOption(0),
-                child: Text('Did not apply to me at all'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+              child: Text(
+                questions[currentQuestionIndex],
+                style: GoogleFonts.firaSansCondensed(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 22,
+                  color: Color.fromARGB(255, 112, 112, 112),
+                ),
               ),
-              ElevatedButton(
-                onPressed: () => _selectOption(1),
-                child:
-                    Text('Applied to me to some degree, or some of the time'),
-              ),
-              ElevatedButton(
-                onPressed: () => _selectOption(2),
-                child: Text(
-                    'Applied to me to a considerable degree or a good part of time'),
-              ),
-              ElevatedButton(
-                onPressed: () => _selectOption(3),
-                child: Text('Applied to me very much or most of the time'),
-              ),
-            ],
-          ),
-        ],
+            ),
+            SizedBox(height: 16.0),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  padding: EdgeInsets.fromLTRB(250, 50, 250, 0),
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () => _selectOption(0),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.all(16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: Text(
+                      'Did not apply to me at all',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Color.fromARGB(255, 76, 52, 225),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Container(
+                  padding: EdgeInsets.fromLTRB(250, 0, 250, 0),
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () => _selectOption(1),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.all(16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: Text(
+                      'Applied to me to some degree, or some of the time',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Color.fromARGB(255, 76, 52, 225),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Container(
+                  padding: EdgeInsets.fromLTRB(250, 0, 250, 0),
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () => _selectOption(2),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.all(16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: Text(
+                      'Applied to me to a considerable degree or a good part of time',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Color.fromARGB(255, 76, 52, 225),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                Container(
+                  padding: EdgeInsets.fromLTRB(250, 0, 250, 0),
+                  width: double.infinity,
+                  child: OutlinedButton(
+                    onPressed: () => _selectOption(3),
+                    style: OutlinedButton.styleFrom(
+                      padding: EdgeInsets.all(16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                    child: Text(
+                      'Applied to me very much or most of the time',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Color.fromARGB(255, 76, 52, 225),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:dass_frontend/admin/admin_dashboard.dart';
+import 'package:dass_frontend/admin/users_attempts.dart';
+import 'package:dass_frontend/admin/users_view.dart';
 import 'package:dass_frontend/admin/create_user.dart';
 import 'package:dass_frontend/signin_screen.dart';
-import 'package:dass_frontend/signup_screen.dart';
 import 'package:dass_frontend/splash_screen.dart';
 import 'package:dass_frontend/user/user_dashboard.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +19,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: splashScreen(),
       routes: {
-        SignUpPage.routeName: (ctx) => SignUpPage(),
         SigninScreen.routeName: (ctx) => SigninScreen(),
         AdminDashboard.routeName: (ctx) => AdminDashboard(),
+        UsersView.routeName: (ctx) => UsersView(),
         CreateUser.routeName: (ctx) => CreateUser(),
         UserDashboard.routeName: (ctx) => UserDashboard(
               quizId: null,
             ),
+        UserAttempts.routeName: (ctx) => UserAttempts(),
       },
       debugShowCheckedModeBanner: false,
     );

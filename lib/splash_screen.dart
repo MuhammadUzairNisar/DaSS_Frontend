@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'package:dass_frontend/signin_screen.dart';
-import 'package:dass_frontend/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class splashScreen extends StatefulWidget {
@@ -26,23 +25,23 @@ class _splashScreenState extends State<splashScreen> {
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
         colors: const [
-          Color.fromARGB(255, 255, 255, 255),
-          Color.fromARGB(255, 169, 159, 224),
-          Color.fromARGB(255, 122, 110, 204),
-          Color.fromARGB(255, 98, 81, 214),
-          Color.fromARGB(255, 70, 50, 197),
-          Color.fromARGB(255, 52, 25, 221),
+          Color.fromARGB(255, 211, 204, 255),
+          Color.fromARGB(255, 122, 105, 239),
+          Color.fromARGB(255, 110, 92, 230),
+          Color.fromARGB(255, 76, 52, 225),
+          Color.fromARGB(255, 59, 40, 185),
+          Color.fromARGB(255, 28, 4, 187),
         ],
       )),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Image.asset(
-          //   'assets/techlogo.png',
-          //   height: 400,
-          //   width: 300,
-          // ),
+          Image.asset(
+            'assets/quiz_system.png',
+            height: 400,
+            width: 300,
+          ),
         ],
       ),
     );

@@ -1,12 +1,11 @@
 // ignore_for_file: unused_local_variable, prefer_const_constructors, avoid_print, prefer_const_declarations, prefer_final_fields, library_private_types_in_public_api, use_key_in_widget_constructors, depend_on_referenced_packages, use_build_context_synchronously
 
 import 'dart:convert';
-
-import 'package:dass_frontend/admin/admin_dashboard.dart';
 import 'package:dass_frontend/user/user_dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:fluttertoast/fluttertoast.dart';
+import 'admin/admin_dashboard.dart';
 
 class SigninScreen extends StatefulWidget {
   static const routeName = '/signIn_screen';
@@ -78,59 +77,81 @@ class _SigninScreenState extends State<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Sign In'),
-            TextFormField(
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: 'Email',
+      backgroundColor: Color.fromARGB(255, 217, 211, 255),
+      body: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/signin.jpg'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-            SizedBox(height: 20.0),
-            TextFormField(
-              controller: _passwordController,
-              obscureText: !_isPasswordVisible,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                  icon: Icon(
-                    _isPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off,
+          ),
+          SizedBox(
+            width: 400.0,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Card(
+                elevation: 2.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Sign In', style: GoogleFonts.lobster(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 35,
+                                color: Color.fromARGB(255, 50, 50, 50),
+                              ),),
+                      SizedBox(height: 20.0),
+                      TextFormField(
+                        controller: _emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: !_isPasswordVisible,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+                      ElevatedButton(
+                        onPressed: _signIn,
+                        child: Text('Sign In'),
+                         style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    Color.fromARGB(255, 76, 52, 225),
+                  ),
+                ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: _signIn,
-              child: Text('Sign In'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
-    );
-  }
-
-  void showToastMessage(String? msg) {
-    var toast = Fluttertoast.showToast(
-      msg: msg!,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
     );
   }
 }
