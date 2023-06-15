@@ -1,9 +1,11 @@
+// ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
+
 import 'package:dass_frontend/admin/admin_dashboard.dart';
-import 'package:dass_frontend/admin/users_attempts.dart';
+import 'package:dass_frontend/admin/congratulations_screen.dart';
 import 'package:dass_frontend/admin/users_view.dart';
 import 'package:dass_frontend/admin/create_user.dart';
-import 'package:dass_frontend/signin_screen.dart';
-import 'package:dass_frontend/splash_screen.dart';
+import 'package:dass_frontend/views/signin_screen.dart';
+import 'package:dass_frontend/views/splash_screen.dart';
 import 'package:dass_frontend/user/user_dashboard.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +28,6 @@ class MyApp extends StatelessWidget {
         UserDashboard.routeName: (ctx) => UserDashboard(
               quizId: null,
             ),
-        UserAttempts.routeName: (ctx) => UserAttempts(),
       },
       debugShowCheckedModeBanner: false,
     );

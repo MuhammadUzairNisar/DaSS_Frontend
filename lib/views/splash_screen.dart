@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, camel_case_types, use_key_in_widget_constructors, library_private_types_in_public_api, unused_import, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
-import 'package:dass_frontend/signin_screen.dart';
+import 'package:dass_frontend/views/signin_screen.dart';
 import 'package:flutter/material.dart';
 
 class splashScreen extends StatefulWidget {

@@ -1,11 +1,11 @@
-// ignore_for_file: unused_local_variable, prefer_const_constructors, avoid_print, prefer_const_declarations, prefer_final_fields, library_private_types_in_public_api, use_key_in_widget_constructors, depend_on_referenced_packages, use_build_context_synchronously
+// ignore_for_file: unused_local_variable, prefer_const_constructors, avoid_print, prefer_const_declarations, prefer_final_fields, library_private_types_in_public_api, use_key_in_widget_constructors, depend_on_referenced_packages, use_build_context_synchronously, non_constant_identifier_names, sort_child_properties_last
 
 import 'dart:convert';
 import 'package:dass_frontend/user/user_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'admin/admin_dashboard.dart';
+import '../admin/admin_dashboard.dart';
 
 class SigninScreen extends StatefulWidget {
   static const routeName = '/signIn_screen';
@@ -47,8 +47,6 @@ class _SigninScreenState extends State<SigninScreen> {
         final quizId = user['quiz_id'];
         final name = user['name'];
         final quiz_attempt_id = responseData['quiz_attempt_id'];
-
-        // showToastMessage('Sign-in Successful');
 
         if (userType == 'admin') {
           Navigator.pushNamed(context, AdminDashboard.routeName);
@@ -101,11 +99,14 @@ class _SigninScreenState extends State<SigninScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Sign In', style: GoogleFonts.lobster(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 35,
-                                color: Color.fromARGB(255, 50, 50, 50),
-                              ),),
+                      Text(
+                        'Sign In',
+                        style: GoogleFonts.lobster(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 35,
+                          color: Color.fromARGB(255, 50, 50, 50),
+                        ),
+                      ),
                       SizedBox(height: 20.0),
                       TextFormField(
                         controller: _emailController,
@@ -138,11 +139,11 @@ class _SigninScreenState extends State<SigninScreen> {
                       ElevatedButton(
                         onPressed: _signIn,
                         child: Text('Sign In'),
-                         style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 76, 52, 225),
-                  ),
-                ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            Color.fromARGB(255, 76, 52, 225),
+                          ),
+                        ),
                       ),
                     ],
                   ),

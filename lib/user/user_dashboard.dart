@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_const_constructors, avoid_print, depend_on_referenced_packages, non_constant_identifier_names, use_key_in_widget_constructors, library_private_types_in_public_api
+// ignore_for_file: prefer_const_constructors, avoid_print, depend_on_referenced_packages, non_constant_identifier_names, use_key_in_widget_constructors, library_private_types_in_public_api, use_build_context_synchronously
 
+import 'package:dass_frontend/admin/congratulations_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:dass_frontend/signin_screen.dart';
+import 'package:dass_frontend/views/signin_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -65,7 +66,10 @@ class _UserDashboardState extends State<UserDashboard> {
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
         print(responseData);
-        _logout();
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => CongratulationScreen()),
+        );
       } else {}
     } catch (e) {
       print('An error occurred while creating user');
@@ -115,7 +119,8 @@ class _UserDashboardState extends State<UserDashboard> {
       child: Scaffold(
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
         appBar: AppBar(
-          title: Center(child: Text(
+          title: Center(
+              child: Text(
             '${widget.name}',
           )),
           backgroundColor: Color.fromARGB(255, 76, 52, 225),

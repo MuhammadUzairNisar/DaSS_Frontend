@@ -1,7 +1,7 @@
-// ignore_for_file: depend_on_referenced_packages, use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, prefer_const_constructors, unused_local_variable, use_build_context_synchronously
+// ignore_for_file: depend_on_referenced_packages, use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, prefer_const_constructors, unused_local_variable, use_build_context_synchronously, avoid_unnecessary_containers, unused_element, sort_child_properties_last
 
 import 'package:dass_frontend/admin/create_user.dart';
-import 'package:dass_frontend/signin_screen.dart';
+import 'package:dass_frontend/views/signin_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -75,17 +75,21 @@ class _UsersViewState extends State<UsersView> {
                 itemBuilder: (BuildContext context, int index) {
                   final attempt = quizAttempts[index];
                   return ListTile(
-                    title: Text('Quiz Id: ${attempt['quiz_id']}',style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
+                    title: Text('Quiz Id: ${attempt['quiz_id']}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        )),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Text('Anxiety: ', style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),),
+                            Text(
+                              'Anxiety: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             Text(
                               (attempt['anxiety_level'] != null &&
                                       attempt['anxiety_level'] < 3)
@@ -115,9 +119,10 @@ class _UsersViewState extends State<UsersView> {
                         ),
                         Row(
                           children: [
-                            Text('Depression: ',style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
+                            Text('Depression: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                )),
                             Text((attempt['depression_level'] != null &&
                                     attempt['depression_level'] < 4)
                                 ? 'Normal'
@@ -151,9 +156,10 @@ class _UsersViewState extends State<UsersView> {
                         ),
                         Row(
                           children: [
-                            Text('Stress: ',style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            )),
+                            Text('Stress: ',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                )),
                             Text((attempt['stress_level'] != null &&
                                     attempt['stress_level'] < 7)
                                 ? 'Normal'
@@ -273,7 +279,7 @@ class _UsersViewState extends State<UsersView> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, CreateUser.routeName);
+                  Navigator.pushReplacementNamed(context, CreateUser.routeName);
                 },
               ),
             ),

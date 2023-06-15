@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, unused_field, prefer_const_constructors, prefer_final_fields, unused_local_variable, empty_catches
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, unused_field, prefer_const_constructors, prefer_final_fields, unused_local_variable, empty_catches, depend_on_referenced_packages, avoid_print, use_build_context_synchronously, sort_child_properties_last
 
 import 'dart:convert';
 import 'package:dass_frontend/admin/users_view.dart';
@@ -17,15 +17,15 @@ class _CreateUserState extends State<CreateUser> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController typeController = TextEditingController();
 
-  List<String> dropdownItems = []; // List to store dropdown items
-  String selectedDropdownItem = ''; // Currently selected dropdown item
+  List<String> dropdownItems = [];
+  String selectedDropdownItem = '';
   String? selectedQuizId;
   List<Map<String, dynamic>> quizList = [];
 
   @override
   void initState() {
     super.initState();
-    fetchQuizzes(); // Call the GET API to fetch dropdown items
+    fetchQuizzes();
   }
 
   @override
@@ -76,7 +76,7 @@ class _CreateUserState extends State<CreateUser> {
       final response = await http.post(url, headers: headers, body: body);
 
       if (response.statusCode == 200) {
-        Navigator.pushNamed(context, UsersView.routeName);
+        Navigator.pushReplacementNamed(context, UsersView.routeName);
       } else {
         // showToastMessage('Failed to Create User');
       }
@@ -154,10 +154,10 @@ class _CreateUserState extends State<CreateUser> {
                 addUser();
               },
               style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 76, 52, 225),
-                  ),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                  Color.fromARGB(255, 76, 52, 225),
                 ),
+              ),
             ),
           ],
         ),
