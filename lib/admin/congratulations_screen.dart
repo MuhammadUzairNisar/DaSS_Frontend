@@ -42,7 +42,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Thank You! Your Test has been Submitted Successfully",
+                "Thank You!",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,

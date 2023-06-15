@@ -54,16 +54,33 @@ class _SigninScreenState extends State<SigninScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => UserDashboard(
-                      quizId: quizId,
-                      name: name,
-                      quiz_attempt_id: quiz_attempt_id,
-                    )),
+              builder: (context) => UserDashboard(
+                quizId: quizId,
+                name: name,
+                quiz_attempt_id: quiz_attempt_id,
+              ),
+            ),
           );
-          // print(quizId);
         } else {
           // showToastMessage('Invalid User Type');
         }
+      } else if (response.statusCode == 401) {
+        // Incorrect email or password
+        showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text('Sign-in Failed'),
+            content: Text('Incorrect email or password. Please try again.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                },
+              ),
+            ],
+          ),
+        );
       } else {
         // showToastMessage('Sign-in Failed');
       }
