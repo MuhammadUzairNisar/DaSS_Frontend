@@ -1,21 +1,23 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, unused_field, prefer_const_constructors, prefer_final_fields, unused_local_variable, empty_catches, depend_on_referenced_packages, avoid_print, use_build_context_synchronously, sort_child_properties_last
-
 import 'dart:convert';
 import 'package:dass_frontend/admin/users_view.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CreateUser extends StatefulWidget {
   static const routeName = '/CreateUser';
+
   @override
   _CreateUserState createState() => _CreateUserState();
 }
 
 class _CreateUserState extends State<CreateUser> {
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController cnicController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController typeController = TextEditingController();
+  final TextEditingController dobController = TextEditingController();
 
   List<String> dropdownItems = [];
   String selectedDropdownItem = '';
@@ -31,9 +33,10 @@ class _CreateUserState extends State<CreateUser> {
   @override
   void dispose() {
     nameController.dispose();
-    emailController.dispose();
     passwordController.dispose();
+    cnicController.dispose();
     typeController.dispose();
+    dobController.dispose();
     super.dispose();
   }
 
@@ -60,16 +63,18 @@ class _CreateUserState extends State<CreateUser> {
     final headers = {'Content-Type': 'application/json'};
 
     final name = nameController.text;
-    final email = emailController.text;
     final password = passwordController.text;
+    final cnic = cnicController.text;
     final type = typeController.text;
+    final dob = dobController.text;
 
     final body = json.encode({
       'name': name,
-      'email': email,
-      'password': password,
+      'pin_number': password,
+      'cnic': cnic,
       'type': type,
       'quiz_id': selectedQuizId,
+      'birth_date': dob,
     });
 
     try {
@@ -82,6 +87,20 @@ class _CreateUserState extends State<CreateUser> {
       }
     } catch (e) {
       // showToastMessage('An error occurred while creating user');
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+
+    if (pickedDate != null) {
+      final formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+      dobController.text = formattedDate;
     }
   }
 
@@ -108,21 +127,29 @@ class _CreateUserState extends State<CreateUser> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(220, 0, 220, 0),
-              child: TextField(
-                controller: emailController,
+              child: TextFormField(
+                controller: passwordController,
+                obscureText: true,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  LengthLimitingTextInputFormatter(5),
+                ],
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: 'Enter PIN',
                 ),
               ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(220, 0, 220, 0),
-              child: TextField(
-                controller: passwordController,
+              child: TextFormField(
+                controller: cnicController,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  LengthLimitingTextInputFormatter(13),
+                ],
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'Enter CNIC Number (without dashes)',
                 ),
-                obscureText: true,
               ),
             ),
             Padding(
@@ -142,6 +169,20 @@ class _CreateUserState extends State<CreateUser> {
                 },
                 decoration: InputDecoration(
                   labelText: 'Quiz',
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(220, 0, 220, 0),
+              child: GestureDetector(
+                onTap: () => _selectDate(context),
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    controller: dobController,
+                    decoration: InputDecoration(
+                      labelText: 'Date of Birth',
+                    ),
+                  ),
                 ),
               ),
             ),

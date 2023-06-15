@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:dass_frontend/user/user_dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import '../admin/admin_dashboard.dart';
@@ -15,28 +16,27 @@ class SigninScreen extends StatefulWidget {
 }
 
 class _SigninScreenState extends State<SigninScreen> {
-  TextEditingController _emailController = TextEditingController();
+  // TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
+    // _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   Future<void> _signIn() async {
     final url = 'http://127.0.0.1:8000/api/login';
-    final email = _emailController.text;
+    // final email = _emailController.text;
     final password = _passwordController.text;
 
     try {
       final response = await http.post(
         Uri.parse(url),
         body: {
-          'email': email,
-          'password': password,
+          'pin_number': password,
         },
       );
 
@@ -70,7 +70,7 @@ class _SigninScreenState extends State<SigninScreen> {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text('Sign-in Failed'),
-            content: Text('Incorrect email or password. Please try again.'),
+            content: Text('Incorrect Pin Number'),
             actions: [
               TextButton(
                 child: Text('OK'),
@@ -125,19 +125,23 @@ class _SigninScreenState extends State<SigninScreen> {
                         ),
                       ),
                       SizedBox(height: 20.0),
-                      TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                        ),
-                      ),
-                      SizedBox(height: 20.0),
+                      // TextFormField(
+                      //   controller: _emailController,
+                      //   keyboardType: TextInputType.emailAddress,
+                      //   decoration: InputDecoration(
+                      //     labelText: 'Email',
+                      //   ),
+                      // ),
+                      // SizedBox(height: 20.0),
                       TextFormField(
                         controller: _passwordController,
                         obscureText: !_isPasswordVisible,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          LengthLimitingTextInputFormatter(5),
+                        ],
                         decoration: InputDecoration(
-                          labelText: 'Password',
+                          labelText: 'Enter PIN',
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
@@ -151,6 +155,15 @@ class _SigninScreenState extends State<SigninScreen> {
                             ),
                           ),
                         ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a pin number.';
+                          }
+                          if (value.length != 5) {
+                            return 'Pin length should be 5.';
+                          }
+                          return null;
+                        },
                       ),
                       SizedBox(height: 20.0),
                       ElevatedButton(

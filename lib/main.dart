@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors
 
 import 'package:dass_frontend/admin/admin_dashboard.dart';
-import 'package:dass_frontend/admin/congratulations_screen.dart';
 import 'package:dass_frontend/admin/users_view.dart';
 import 'package:dass_frontend/admin/create_user.dart';
 import 'package:dass_frontend/views/signin_screen.dart';

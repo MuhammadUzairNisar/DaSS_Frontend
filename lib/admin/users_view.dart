@@ -3,6 +3,7 @@
 import 'package:dass_frontend/admin/create_user.dart';
 import 'package:dass_frontend/views/signin_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -16,11 +17,18 @@ class UsersView extends StatefulWidget {
 
 class _UsersViewState extends State<UsersView> {
   List<User> users = [];
+  final TextEditingController newPinController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     fetchUsers();
+  }
+
+  @override
+  void dispose() {
+    newPinController.dispose();
+    super.dispose();
   }
 
   Future<void> fetchUsers() async {
@@ -189,6 +197,12 @@ class _UsersViewState extends State<UsersView> {
                         ),
                       ],
                     ),
+                    trailing: Text(
+                      'Attempt Date: ${attempt['created_at'].substring(0, 10)}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   );
                 },
               ),
@@ -201,6 +215,31 @@ class _UsersViewState extends State<UsersView> {
       }
     } catch (e) {
       print('An error occurred while retrieving quiz attempts. Error: $e');
+    }
+  }
+
+  Future<void> changePin(int id, String newPin) async {
+    final url = Uri.parse('http://127.0.0.1:8000/api/change_pin_number');
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({
+          'user_id': id,
+          'pin_number': newPin,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+      if (response.statusCode == 200) {
+        showToastMessage('Pin Number Changed Successfully');
+        fetchUsers();
+      } else {
+        showToastMessage('Failed to Change Pin Number');
+        print('Failed to change pin number. Error: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      print('An error occurred while changing pin number. Error: $e');
     }
   }
 
@@ -231,16 +270,17 @@ class _UsersViewState extends State<UsersView> {
                 DataTable(
                   columns: const <DataColumn>[
                     DataColumn(label: Text('Name')),
-                    DataColumn(label: Text('Email')),
+                    DataColumn(label: Text('CNIC')),
                     DataColumn(label: Text('Type')),
                     DataColumn(label: Text('Attempts')),
+                    DataColumn(label: Text('Change PIN')),
                     DataColumn(label: Text('Actions')),
                   ],
                   rows: users.map((user) {
                     return DataRow(
                       cells: [
                         DataCell(Text(user.name)),
-                        DataCell(Text(user.email)),
+                        DataCell(Text(user.cnic)),
                         DataCell(Text(user.type)),
                         DataCell(
                           IconButton(
@@ -253,10 +293,77 @@ class _UsersViewState extends State<UsersView> {
                         ),
                         DataCell(
                           IconButton(
+                            icon: Icon(Icons.pin_rounded),
+                            color: Colors.blue,
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Change PIN'),
+                                    content: TextFormField(
+                                      controller: newPinController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Enter new PIN',
+                                      ),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9]')),
+                                        LengthLimitingTextInputFormatter(5),
+                                      ],
+                                    ),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text('Cancel'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        child: Text('Save'),
+                                        onPressed: () {
+                                          changePin(
+                                              user.id, newPinController.text);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        DataCell(
+                          IconButton(
                             icon: Icon(Icons.delete),
                             color: Colors.red,
                             onPressed: () {
-                              deleteUser(user.id);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Delete User'),
+                                    content: Text(
+                                        'Are you sure you want to delete this user?'),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: Text('No'),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        child: Text('Yes'),
+                                        onPressed: () {
+                                          deleteUser(user.id);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
                         ),
@@ -267,37 +374,56 @@ class _UsersViewState extends State<UsersView> {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              padding: EdgeInsets.all(20),
-              child: ElevatedButton(
-                child: Text('Add User'),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    Color.fromARGB(255, 76, 52, 225),
+        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            DrawerHeader(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  CircleAvatar(
+                    backgroundImage:
+                        AssetImage('assets/images/default_avatar.png'),
+                    radius: 30,
                   ),
-                ),
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, CreateUser.routeName);
-                },
+                  Text(
+                    'Welcome, Admin',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 76, 52, 225),
               ),
             ),
-          ),
-        ],
+            ListTile(
+              leading: Icon(Icons.add),
+              title: Text('Create User'),
+              onTap: () {
+                Navigator.pushNamed(context, CreateUser.routeName);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Logout'),
+              onTap: _logout,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void showToastMessage(String? msg) {
-    var toast = Fluttertoast.showToast(
-      msg: msg!,
+  void showToastMessage(String message) {
+    Fluttertoast.showToast(
+      msg: message,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
     );
   }
 }
@@ -305,22 +431,22 @@ class _UsersViewState extends State<UsersView> {
 class User {
   final int id;
   final String name;
-  final String email;
+  final String cnic;
   final String type;
 
   User({
     required this.id,
     required this.name,
-    required this.email,
+    required this.cnic,
     required this.type,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      type: json['type'] ?? '',
+      id: json['id'],
+      name: json['name'],
+      cnic: json['cnic'],
+      type: json['type'],
     );
   }
 }
