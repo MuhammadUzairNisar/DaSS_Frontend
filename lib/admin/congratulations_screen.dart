@@ -15,7 +15,7 @@ class _CongratulationScreenState extends State<CongratulationScreen> {
     super.initState();
     Timer(
       Duration(seconds: 3),
-      () => Navigator.of(context).pushNamed(SigninScreen.routeName),
+      () => Navigator.of(context).pushReplacementNamed(SigninScreen.routeName),
     );
   }
 

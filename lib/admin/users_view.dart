@@ -383,11 +383,6 @@ class _UsersViewState extends State<UsersView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  CircleAvatar(
-                    backgroundImage:
-                        AssetImage('assets/images/default_avatar.png'),
-                    radius: 30,
-                  ),
                   Text(
                     'Welcome, Admin',
                     style: TextStyle(

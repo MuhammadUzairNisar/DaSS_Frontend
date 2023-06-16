@@ -24,11 +24,28 @@ class _UserDashboardState extends State<UserDashboard> {
   List<int> selectedOptions = [];
   int currentQuestionIndex = 0;
 
+  var textOption1 = '';
+  var textOption2 = '';
+  var textOption3 = '';
+  var textOption4 = '';
+
   @override
   void initState() {
     super.initState();
     fetchQuizQuestions();
     print(widget.quizId);
+    if (widget.quizId == 1 || widget.quizId == 2) {
+      textOption1 = 'Did not apply to me at all';
+      textOption2 = 'Applied to me to some degree, or some of the time';
+      textOption3 =
+          'Applied to me to a considerable degree or a good part of time';
+      textOption4 = 'Applied to me very much or most of the time';
+    } else if (widget.quizId == 3 || widget.quizId == 4) {
+      textOption1 = 'کبھی نہیں';
+      textOption2 = 'کبھی کبھار';
+      textOption3 = 'زیادہ تر وقت';
+      textOption4 = 'ہر وقت';
+    }
   }
 
   Future<void> fetchQuizQuestions() async {
@@ -167,7 +184,7 @@ class _UserDashboardState extends State<UserDashboard> {
                       ),
                     ),
                     child: Text(
-                      'Did not apply to me at all',
+                      textOption1,
                       style: TextStyle(
                         fontSize: 16.0,
                         color: Color.fromARGB(255, 76, 52, 225),
@@ -188,7 +205,7 @@ class _UserDashboardState extends State<UserDashboard> {
                       ),
                     ),
                     child: Text(
-                      'Applied to me to some degree, or some of the time',
+                      textOption2,
                       style: TextStyle(
                         fontSize: 16.0,
                         color: Color.fromARGB(255, 76, 52, 225),
@@ -209,7 +226,7 @@ class _UserDashboardState extends State<UserDashboard> {
                       ),
                     ),
                     child: Text(
-                      'Applied to me to a considerable degree or a good part of time',
+                      textOption3,
                       style: TextStyle(
                         fontSize: 16.0,
                         color: Color.fromARGB(255, 76, 52, 225),
@@ -230,7 +247,7 @@ class _UserDashboardState extends State<UserDashboard> {
                       ),
                     ),
                     child: Text(
-                      'Applied to me very much or most of the time',
+                      textOption4,
                       style: TextStyle(
                         fontSize: 16.0,
                         color: Color.fromARGB(255, 76, 52, 225),
