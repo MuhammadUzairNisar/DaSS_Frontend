@@ -1,5 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages, use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, prefer_const_constructors, unused_local_variable, use_build_context_synchronously, avoid_unnecessary_containers, unused_element, sort_child_properties_last
 
+import 'dart:io';
+
 import 'package:dass_frontend/admin/create_user.dart';
 import 'package:dass_frontend/views/signin_screen.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,10 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:path_provider/path_provider.dart';
+import 'dart:math';
 
 class UsersView extends StatefulWidget {
   static const routeName = '/UsersView';
@@ -29,6 +35,14 @@ class _UsersViewState extends State<UsersView> {
   void dispose() {
     newPinController.dispose();
     super.dispose();
+  }
+
+  int generateRandomNumber() {
+    Random random = Random();
+    int min = 100000; // Minimum 6-digit number (100,000)
+    int max = 999999; // Maximum 6-digit number (999,999)
+    int randomNumber = min + random.nextInt(max - min);
+    return randomNumber;
   }
 
   Future<void> fetchUsers() async {
@@ -197,12 +211,210 @@ class _UsersViewState extends State<UsersView> {
                         ),
                       ],
                     ),
-                    trailing: Text(
-                      'Attempt Date: ${attempt['created_at'].substring(0, 10)}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                    trailing: Wrap(children: [
+                      IconButton(
+                        onPressed: () async {
+                          final pdf = pw.Document();
+
+                          final fontData =
+                              await rootBundle.load('fonts/Roboto-Regular.ttf');
+                          final ttf = pw.Font.ttf(fontData.buffer.asByteData());
+
+                          pdf.addPage(
+                            pw.Page(
+                              build: (pw.Context context) {
+                                return pw.Column(
+                                  children: [
+                                    pw.Text(
+                                      'ADS Report',
+                                      style:
+                                          pw.TextStyle(font: ttf, fontSize: 12),
+
+                                      //
+                                      //
+                                    ),
+
+                                    pw.Text('Quiz Id: ${attempt['quiz_id']}',
+                                        style: pw.TextStyle(
+                                          fontWeight: pw.FontWeight.bold,
+                                        )),
+                                    pw.Text(
+                                      'Attempt Date: ${attempt['created_at'].substring(0, 10)}',
+                                      style: pw.TextStyle(
+                                        fontWeight: pw.FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    pw.Column(
+                                      crossAxisAlignment:
+                                          pw.CrossAxisAlignment.start,
+                                      children: [
+                                        pw.Row(
+                                          children: [
+                                            pw.Text(
+                                              'Anxiety: ',
+                                              style: pw.TextStyle(
+                                                fontWeight: pw.FontWeight.bold,
+                                              ),
+                                            ),
+                                            pw.Text(
+                                              (attempt['anxiety_level'] !=
+                                                          null &&
+                                                      attempt['anxiety_level'] <
+                                                          3)
+                                                  ? 'Normal'
+                                                  : (attempt['anxiety_level'] !=
+                                                                  null &&
+                                                              attempt['anxiety_level'] ==
+                                                                  4 ||
+                                                          attempt['anxiety_level'] ==
+                                                              5)
+                                                      ? 'Mild'
+                                                      : (attempt['anxiety_level'] !=
+                                                                      null &&
+                                                                  attempt['anxiety_level'] ==
+                                                                      6 ||
+                                                              attempt['anxiety_level'] ==
+                                                                  7)
+                                                          ? 'Moderate'
+                                                          : (attempt['anxiety_level'] !=
+                                                                          null &&
+                                                                      attempt['anxiety_level'] ==
+                                                                          8 ||
+                                                                  attempt['anxiety_level'] ==
+                                                                      9)
+                                                              ? 'Severe'
+                                                              : (attempt['anxiety_level'] !=
+                                                                          null &&
+                                                                      attempt['anxiety_level'] >=
+                                                                          10)
+                                                                  ? 'Extremely Severe'
+                                                                  : 'No Data Available',
+                                            ),
+                                          ],
+                                        ),
+                                        pw.Row(
+                                          children: [
+                                            pw.Text('Depression: ',
+                                                style: pw.TextStyle(
+                                                  fontWeight:
+                                                      pw.FontWeight.bold,
+                                                )),
+                                            pw.Text((attempt['depression_level'] != null &&
+                                                    attempt['depression_level'] <
+                                                        4)
+                                                ? 'Normal'
+                                                : (attempt['depression_level'] != null &&
+                                                            attempt['depression_level'] ==
+                                                                5 ||
+                                                        attempt['depression_level'] ==
+                                                            6)
+                                                    ? 'Mild'
+                                                    : (attempt['depression_level'] !=
+                                                                    null &&
+                                                                attempt['depression_level'] ==
+                                                                    7 ||
+                                                            attempt['depression_level'] ==
+                                                                8 ||
+                                                            attempt['depression_level'] ==
+                                                                9 ||
+                                                            attempt['depression_level'] ==
+                                                                10)
+                                                        ? 'Moderate'
+                                                        : (attempt['depression_level'] !=
+                                                                        null &&
+                                                                    attempt['depression_level'] ==
+                                                                        11 ||
+                                                                attempt['depression_level'] ==
+                                                                    12 ||
+                                                                attempt['depression_level'] ==
+                                                                    13)
+                                                            ? 'Severe'
+                                                            : (attempt['depression_level'] !=
+                                                                        null &&
+                                                                    attempt['depression_level'] >= 14)
+                                                                ? 'Extremely Severe'
+                                                                : 'No Data Available'),
+                                          ],
+                                        ),
+                                        pw.Row(
+                                          children: [
+                                            pw.Text('Stress: ',
+                                                style: pw.TextStyle(
+                                                  fontWeight:
+                                                      pw.FontWeight.bold,
+                                                )),
+                                            pw.Text((attempt['stress_level'] !=
+                                                        null &&
+                                                    attempt['stress_level'] < 7)
+                                                ? 'Normal'
+                                                : (attempt['stress_level'] != null &&
+                                                            attempt['stress_level'] ==
+                                                                8 ||
+                                                        attempt['stress_level'] ==
+                                                            9)
+                                                    ? 'Mild'
+                                                    : (attempt['stress_level'] !=
+                                                                    null &&
+                                                                attempt['stress_level'] ==
+                                                                    10 ||
+                                                            attempt['stress_level'] ==
+                                                                11 ||
+                                                            attempt['stress_level'] ==
+                                                                12)
+                                                        ? 'Moderate'
+                                                        : (attempt['stress_level'] !=
+                                                                        null &&
+                                                                    attempt['stress_level'] ==
+                                                                        13 ||
+                                                                attempt['stress_level'] ==
+                                                                    14 ||
+                                                                attempt['stress_level'] ==
+                                                                    15 ||
+                                                                attempt['stress_level'] ==
+                                                                    16)
+                                                            ? 'Severe'
+                                                            : (attempt['stress_level'] !=
+                                                                        null &&
+                                                                    attempt['stress_level'] >= 17)
+                                                                ? 'Extremely Severe'
+                                                                : 'No Data Available'),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    // Add more content to the PDF document as needed
+                                    pw.Align(
+                                        alignment: pw.Alignment.bottomRight,
+                                        child: pw.Text('Signature')),
+                                  ],
+                                );
+                              },
+                            ),
+                          );
+
+                          final directory = await getTemporaryDirectory();
+                          int number = generateRandomNumber();
+                          final filePath =
+                              '${directory.path}/report${number}.pdf';
+                          final file = File(filePath);
+                          await file.writeAsBytes(await pdf.save());
+
+                          print('PDF document generated: $filePath');
+                        },
+                        icon: Icon(
+                          Icons.picture_as_pdf,
+                          color: Colors.red,
+                        ),
                       ),
-                    ),
+                      SizedBox(width: 20),
+                      Text(
+                        'Attempt Date: ${attempt['created_at'].substring(0, 10)}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ]),
                   );
                 },
               ),
